@@ -21,7 +21,7 @@ const Navbar = () => {
                 Home
             </NavLink>
             <NavLink
-                to="/apps"
+                to="/available-foods"
                 className={({ isActive }) =>
                     `px-4 py-2 font-medium transition hover:text-[#9F62F2] ${isActive ? 'text-[#9F62F2] underline' : ''}`
                 }

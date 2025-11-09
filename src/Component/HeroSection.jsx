@@ -62,7 +62,7 @@ const HeroSection = () => {
             className="relative w-full h-[50vh] md:h-[80vh] flex items-center justify-center bg-cover bg-center"
             style={{ backgroundImage: `url(${slide.image})` }}
           >
-            <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-black/60"></div>
+            <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black/40"></div>
             <div className="relative text-center text-white z-10 px-6">
               <AnimatePresence mode="wait">
                 {activeIndex === index && (

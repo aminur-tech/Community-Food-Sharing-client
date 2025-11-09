@@ -5,6 +5,9 @@ import AuthLayout from '../Layouts/AuthLayout';
 import Login from '../Pages/Login';
 import SignUp from '../Pages/SignUp';
 import Home from '../Pages/Home';
+import AvailableFoods from '../Pages/AvailableFoods';
+import Loading from '../Component/Loading';
+import Error from '../Component/Error';
 
 export const router = createBrowserRouter([
     {
@@ -13,7 +16,17 @@ export const router = createBrowserRouter([
         children: ([
             {
                 path: '/',
-                Component: Home
+                Component: Home,
+                loader: ()=>fetch('http://localhost:3000/featured-foods'),
+                HydrateFallback: Loading,
+                errorElement:<Error></Error>
+            },
+            {
+                path:'/available-foods',
+                Component: AvailableFoods,
+                loader: ()=> fetch('http://localhost:3000/available-foods'),
+                HydrateFallback: Loading,
+                errorElement: <Error></Error>
             }
         ])
     },
