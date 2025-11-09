@@ -14,36 +14,36 @@ const HeroSection = () => {
     {
       id: 1,
       image: "https://i.ibb.co/Xx1KBpWp/s1.jpg",
-      title: "Community Food Sharing",
-      description: "Connect with neighbors and share meals together."
+      title: "Make Every Meal Count",
+      description: "Join PlateShare and spread happiness through food."
     },
     {
       id: 2,
       image: "https://i.ibb.co/nsW6DTXh/s2.jpg",
-      title: "Cozy Outfits, Cozy Meals",
-      description: "Enjoy food and comfort in a friendly environment."
+      title: "Community Food Sharing",
+      description: "Connect with neighbors and share meals together."
     },
     {
       id: 3,
       image: "https://i.ibb.co/jkFWqsDw/s3.jpg",
-      title: "Make Every Meal Count",
-      description: "Join PlateShare and spread happiness through food."
+      title: "Cozy Meals, Happy Hearts",
+      description: "Enjoy food and comfort in a friendly environment."
     }
   ];
 
   const titleVariants = {
     hidden: { opacity: 0, y: 50 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.8 } }
+    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
   };
 
   const descVariants = {
     hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.8, delay: 0.5 } }
+    visible: { opacity: 1, y: 0, transition: { duration: 0.8, delay: 0.2, ease: "easeOut" } }
   };
 
   const buttonVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.8, delay: 1 } }
+    hidden: { opacity: 0, scale: 0.9 },
+    visible: { opacity: 1, scale: 1, transition: { duration: 0.6, delay: 0.4 } }
   };
 
   return (
@@ -51,10 +51,18 @@ const HeroSection = () => {
       spaceBetween={30}
       centeredSlides={true}
       autoplay={{ delay: 5000, disableOnInteraction: false }}
-      pagination={{ clickable: true }}
-      navigation={true}
+      pagination={{ 
+        clickable: true,
+        bulletClass: "swiper-pagination-bullet",
+        bulletActiveClass: "swiper-pagination-bullet-active"
+      }}
+      navigation={{
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev"
+      }}
       modules={[Autoplay, Pagination, Navigation]}
       onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
+      className="relative group"
     >
       {slides.map((slide, index) => (
         <SwiperSlide key={slide.id}>
@@ -62,8 +70,10 @@ const HeroSection = () => {
             className="relative w-full h-[50vh] md:h-[80vh] flex items-center justify-center bg-cover bg-center"
             style={{ backgroundImage: `url(${slide.image})` }}
           >
-            <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black/40"></div>
-            <div className="relative text-center text-white z-10 px-6">
+            {/* Improved Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent"></div>
+            
+            <div className="relative text-center text-white z-10 px-6 max-w-4xl">
               <AnimatePresence mode="wait">
                 {activeIndex === index && (
                   <>
@@ -73,7 +83,7 @@ const HeroSection = () => {
                       initial="hidden"
                       animate="visible"
                       exit="hidden"
-                      className="text-4xl md:text-6xl font-bold mb-4 drop-shadow-lg"
+                      className="text-4xl md:text-7xl font-bold mb-4 drop-shadow-lg leading-tight"
                     >
                       {slide.title}
                     </motion.h1>
@@ -84,7 +94,7 @@ const HeroSection = () => {
                       initial="hidden"
                       animate="visible"
                       exit="hidden"
-                      className="text-lg md:text-xl mb-6 drop-shadow-md"
+                      className="text-lg md:text-2xl mb-8 drop-shadow-md font-light"
                     >
                       {slide.description}
                     </motion.p>
@@ -95,10 +105,12 @@ const HeroSection = () => {
                       initial="hidden"
                       animate="visible"
                       exit="hidden"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
                     >
                       <Link
-                        to="/services"
-                        className="btn bg-blue-600 text-white hover:bg-sky-500 border-none font-semibold rounded-full px-6 py-2"
+                        to="/available-foods"
+                        className="inline-block bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition-all duration-300 transform"
                       >
                         View All Foods
                       </Link>
@@ -110,6 +122,13 @@ const HeroSection = () => {
           </div>
         </SwiperSlide>
       ))}
+
+      {/* Enhanced Navigation Buttons */}
+      <button className="swiper-button-prev absolute left-4 top-1/2 -translate-y-1/2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 !w-12 !h-12 bg-white/20 hover:bg-white/40 rounded-full flex items-center justify-center text-white backdrop-blur-sm"></button>
+      <button className="swiper-button-next absolute right-4 top-1/2 -translate-y-1/2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 !w-12 !h-12 bg-white/20 hover:bg-white/40 rounded-full flex items-center justify-center text-white backdrop-blur-sm"></button>
+
+      {/* Enhanced Pagination */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 swiper-pagination"></div>
     </Swiper>
   );
 };

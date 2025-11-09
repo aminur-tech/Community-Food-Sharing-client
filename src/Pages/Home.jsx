@@ -1,7 +1,9 @@
 import React from 'react';
 import HeroSection from '../Component/HeroSection';
-import { useLoaderData } from 'react-router';
+import { Link, useLoaderData } from 'react-router';
 import FoodCard from '../Component/FoodCard';
+import HowItWorks from '../Component/HowItWorks';
+import OurMission from '../Component/OurMission';
 
 const Home = () => {
     const foods = useLoaderData()
@@ -13,7 +15,7 @@ const Home = () => {
                 <HeroSection></HeroSection>
             </div>
             {/* featured-foods */}
-            <div className='text-center mb-10 mt-10'>
+            <div className='text-center mb-10 mt-12'>
                 <h2 className='text-3xl md:text-4xl font-bold text-gray-800 mb-3'>
                     🍴 Featured Food Donations
                 </h2>
@@ -27,7 +29,17 @@ const Home = () => {
                 {
                     foods.map(food => <FoodCard food={food} key={food._id}></FoodCard>)
                 }
+            </div>
+            <div className='flex justify-center'>
+                <Link to='/available-foods' className='btn bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold py-2.5 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-md hover:shadow-lg'>Show All</Link>
+            </div>
 
+            <div className='mt-10 mb-10'>
+                <HowItWorks></HowItWorks>
+            </div>
+
+            <div className='mt-16 mb-10'>
+                <OurMission></OurMission>
             </div>
         </div>
     );
