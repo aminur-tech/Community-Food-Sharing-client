@@ -40,7 +40,8 @@ export const router = createBrowserRouter([
                         <FoodDetails></FoodDetails>
                     </PrivateRoutes>,
                 loader: ({params})=>fetch(`http://localhost:3000/foods/${params.id}`),
-
+                HydrateFallback: Loading,
+                errorElement: <Error></Error>
             },
             {
                 path: '/add-food',

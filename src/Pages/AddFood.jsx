@@ -1,11 +1,161 @@
-import React from 'react';
+import React, { useContext } from "react";
+import useAxiosSecure from "../Hooks/UseAxiosSecure";
+import { AuthContext } from "../Providers/AuthContext";
+import { toast } from "react-toastify";
 
 const AddFood = () => {
-    return (
-        <div>
-            fdss
-        </div>
-    );
+  const { user } = useContext(AuthContext);
+  const axiosSecure = useAxiosSecure();
+
+  const handleAddFood = async (e) => {
+    e.preventDefault();
+
+    const form = e.target;
+    const Image = form.Image.value;
+    const quantity = form.quantity.value;
+    const location = form.location.value;
+    const date = form.date.value;
+    const notes = form.notes.value;
+
+    const newFood = {
+      food_image: Image,
+      food_name: form.title?.value || "Unnamed Food",
+      food_quantity: quantity,
+      pickup_location: location,
+      expire_date: date,
+      additional_notes: notes,
+      donator_name: user.displayName,
+      donator_email: user.email,
+      donator_image: user.photoURL,
+      food_status: "Available",
+    };
+
+    try {
+      const res = await axiosSecure.post("/add-food", newFood);
+      if (res.data.insertedId) {
+        toast.success("Food added successfully!");
+        form.reset();
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to add food. Try again!");
+    }
+  };
+
+  return (
+    <div
+      className="min-h-screen bg-cover bg-center bg-no-repeat flex flex-col justify-center relative"
+      style={{
+        backgroundImage:
+          "url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1600&q=80')",
+      }}
+    >
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-sky-900/70 via-black/60 to-sky-800/70 backdrop-blur-sm"></div>
+
+      {/* Form Container */}
+      <div className="relative z-10 flex justify-center items-center mt-10 mb-10">
+        <form
+          onSubmit={handleAddFood}
+          className="w-full max-w-lg bg-white/20 backdrop-blur-2xl p-10 rounded-3xl shadow-2xl border border-white/30 space-y-5"
+        >
+          <h2 className="text-4xl font-extrabold text-center text-white drop-shadow-lg mb-4">
+            🍽️ Add New Food
+          </h2>
+
+          <div className="divider text-white/70">Donator Info</div>
+
+          {/* Donator Info */}
+          <div className="grid md:grid-cols-2 gap-4">
+            <input
+              type="text"
+              value={user?.displayName || ""}
+              readOnly
+              className="input input-bordered w-full bg-white/60 text-gray-700 font-semibold"
+              placeholder="Donator Name"
+            />
+            <input
+              type="email"
+              value={user?.email || ""}
+              readOnly
+              className="input input-bordered w-full bg-white/60 text-gray-700 font-semibold"
+              placeholder="Donator Email"
+            />
+          </div>
+
+          <input
+            type="text"
+            value={user?.photoURL || ""}
+            readOnly
+            className="input input-bordered w-full bg-white/60 text-gray-700 font-semibold"
+            placeholder="Donator Image URL"
+          />
+
+          <div className="divider text-white/70">Food Details</div>
+
+          {/* Food Inputs */}
+          <input
+            type="text"
+            name="title"
+            placeholder="🍲 Food Name"
+            className="input input-bordered w-full bg-white/80 hover:bg-white focus:ring-2 focus:ring-sky-400 transition-all"
+            required
+          />
+
+          <input
+            type="text"
+            name="Image"
+            placeholder="🖼️ Food Image URL"
+            className="input input-bordered w-full bg-white/80 hover:bg-white focus:ring-2 focus:ring-sky-400 transition-all"
+            required
+          />
+
+          <input
+            type="text"
+            name="quantity"
+            placeholder="🍛 Quantity (e.g., Serves 4)"
+            className="input input-bordered w-full bg-white/80 hover:bg-white focus:ring-2 focus:ring-sky-400 transition-all"
+            required
+          />
+
+          <input
+            type="text"
+            name="location"
+            placeholder="📍 Pickup Location"
+            className="input input-bordered w-full bg-white/80 hover:bg-white focus:ring-2 focus:ring-sky-400 transition-all"
+            required
+          />
+
+          <input
+            type="date"
+            name="date"
+            className="input input-bordered w-full bg-white/80 hover:bg-white focus:ring-2 focus:ring-sky-400 transition-all"
+            required
+          />
+
+          <textarea
+            name="notes"
+            placeholder="📝 Additional Notes"
+            className="textarea textarea-bordered w-full bg-white/80 hover:bg-white focus:ring-2 focus:ring-sky-400 transition-all"
+            required
+          ></textarea>
+
+          {/* Buttons */}
+          <div className="flex justify-end gap-4 pt-4">
+            <button
+              type="button"
+              className="btn btn-outline border-white text-white hover:bg-white hover:text-sky-700 transition-all"
+            >
+              Cancel
+            </button>
+            <button className="btn bg-sky-600 hover:bg-sky-700 text-white font-semibold px-6">
+              Add Food
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
 };
 
 export default AddFood;
