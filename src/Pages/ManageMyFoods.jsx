@@ -1,7 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../Providers/AuthContext";
 import useAxiosSecure from "../Hooks/UseAxiosSecure";
-import { Link } from "react-router";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 
@@ -9,7 +8,10 @@ const ManageMyFoods = () => {
   const { user } = useContext(AuthContext);
   const axiosSecure = useAxiosSecure();
   const [foods, setFoods] = useState([]);
+  const [selectedFood, setSelectedFood] = useState(null);
+  const updateModalRef = useRef(null); // ✅ For modal control
 
+  // ✅ Fetch logged-in user's foods
   useEffect(() => {
     if (user?.email) {
       axiosSecure
@@ -19,15 +21,47 @@ const ManageMyFoods = () => {
     }
   }, [user, axiosSecure]);
 
+  // ✅ Open modal and load selected food
+  const handleModalOpenBtn = (food) => {
+    setSelectedFood(food);
+    updateModalRef.current.showModal();
+  };
 
-//update food
-const handleUpdateFood = () =>{
+  // ✅ Update food handler
+  const handleUpdateSubmit = async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const updatedFood = {
+      food_name: form.food_name.value,
+      food_image: form.food_image.value, // ✅ Added image field
+      food_quantity: form.food_quantity.value,
+      pickup_location: form.pickup_location.value,
+      expire_date: form.expire_date.value,
+    };
 
-}
+    try {
+      const res = await axiosSecure.patch(
+        `/add-food/${selectedFood._id}`,
+        updatedFood
+      );
+      if (res.data.modifiedCount > 0) {
+        setFoods(
+          foods.map((f) =>
+            f._id === selectedFood._id ? { ...f, ...updatedFood } : f
+          )
+        );
+        toast.success("✅ Food updated successfully!");
+        updateModalRef.current.close();
+      } else {
+        toast.info("ℹ️ No changes made.");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("❌ Failed to update!");
+    }
+  };
 
-
-
-  // Delete food
+  // ✅ Delete food
   const handleDelete = (id) => {
     Swal.fire({
       title: "Are you sure?",
@@ -40,16 +74,16 @@ const handleUpdateFood = () =>{
     }).then((result) => {
       if (result.isConfirmed) {
         axiosSecure
-          .delete(`/foods/${id}`)
+          .delete(`/add-food/${id}`)
           .then((res) => {
             if (res.data.deletedCount > 0) {
               setFoods(foods.filter((food) => food._id !== id));
-              toast.success("Food deleted successfully!");
+              toast.success("🗑️ Food deleted successfully!");
             }
           })
           .catch((err) => {
             console.error(err);
-            toast.error("Failed to delete!");
+            toast.error("❌ Failed to delete!");
           });
       }
     });
@@ -98,7 +132,8 @@ const handleUpdateFood = () =>{
                     <td>{food.expire_date}</td>
                     <td>
                       <div className="flex gap-2">
-                        <button onClick={handleUpdateFood}
+                        <button
+                          onClick={() => handleModalOpenBtn(food)}
                           className="btn btn-sm bg-green-500 hover:bg-green-600 text-white"
                         >
                           Update
@@ -115,6 +150,74 @@ const handleUpdateFood = () =>{
                 ))}
               </tbody>
             </table>
+
+            {/* ✅ Update Modal */}
+            <dialog
+              ref={updateModalRef}
+              id="update_modal"
+              className="modal modal-bottom sm:modal-middle"
+            >
+              <div className="modal-box">
+                <h3 className="font-bold text-lg mb-3 text-sky-700">
+                  Update Food Info
+                </h3>
+
+                {selectedFood && (
+                  <form onSubmit={handleUpdateSubmit} className="space-y-3">
+                    <input
+                      name="food_name"
+                      defaultValue={selectedFood.food_name}
+                      className="input input-bordered w-full"
+                      placeholder="Food Name"
+                    />
+
+                    <input
+                      name="food_image"
+                      defaultValue={selectedFood.food_image}
+                      className="input input-bordered w-full"
+                      placeholder="Food Image URL"
+                    />
+
+                    <input
+                      name="food_quantity"
+                      defaultValue={selectedFood.food_quantity}
+                      className="input input-bordered w-full"
+                      placeholder="Quantity"
+                    />
+
+                    <input
+                      name="pickup_location"
+                      defaultValue={selectedFood.pickup_location}
+                      className="input input-bordered w-full"
+                      placeholder="Pickup Location"
+                    />
+
+                    <input
+                      name="expire_date"
+                      defaultValue={selectedFood.expire_date}
+                      type="date"
+                      className="input input-bordered w-full"
+                    />
+
+                    <div className="modal-action">
+                      <button
+                        type="submit"
+                        className="btn bg-sky-600 hover:bg-sky-700 text-white"
+                      >
+                        Save
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => updateModalRef.current.close()}
+                        className="btn"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </form>
+                )}
+              </div>
+            </dialog>
           </div>
         )}
       </div>
