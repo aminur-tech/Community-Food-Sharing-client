@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import useAxiosSecure from "../Hooks/UseAxiosSecure";
 import { AuthContext } from "../Providers/AuthContext";
 import { toast } from "react-toastify";
+import { Link } from "react-router";
 
 const AddFood = () => {
   const { user } = useContext(AuthContext);
@@ -11,6 +12,7 @@ const AddFood = () => {
     e.preventDefault();
 
     const form = e.target;
+    const name = form.name.value
     const Image = form.Image.value;
     const quantity = form.quantity.value;
     const location = form.location.value;
@@ -19,7 +21,7 @@ const AddFood = () => {
 
     const newFood = {
       food_image: Image,
-      food_name: form.title?.value || "Unnamed Food",
+      food_name: name ,
       food_quantity: quantity,
       pickup_location: location,
       expire_date: date,
@@ -27,7 +29,7 @@ const AddFood = () => {
       donator_name: user.displayName,
       donator_email: user.email,
       donator_image: user.photoURL,
-      food_status: "Available",
+      food_status: "available",
     };
 
     try {
@@ -67,88 +69,112 @@ const AddFood = () => {
 
           {/* Donator Info */}
           <div className="grid md:grid-cols-2 gap-4">
-            <input
-              type="text"
-              value={user?.displayName || ""}
-              readOnly
-              className="input input-bordered w-full bg-white/60 text-gray-700 font-semibold"
-              placeholder="Donator Name"
-            />
-            <input
-              type="email"
-              value={user?.email || ""}
-              readOnly
-              className="input input-bordered w-full bg-white/60 text-gray-700 font-semibold"
-              placeholder="Donator Email"
-            />
+            <div>
+              <label className="label text-white font-semibold">Donator Name</label>
+              <input
+                type="text"
+                value={user?.displayName || ""}
+                readOnly
+                className="input input-bordered w-full bg-white/60 text-gray-700 font-semibold"
+              />
+            </div>
+            <div>
+              <label className="label text-white font-semibold">Donator Email</label>
+              <input
+                type="email"
+                value={user?.email || ""}
+                readOnly
+                className="input input-bordered w-full bg-white/60 text-gray-700 font-semibold"
+              />
+            </div>
           </div>
 
-          <input
-            type="text"
-            value={user?.photoURL || ""}
-            readOnly
-            className="input input-bordered w-full bg-white/60 text-gray-700 font-semibold"
-            placeholder="Donator Image URL"
-          />
+          <div>
+            <label className="label text-white font-semibold">Donator Image URL</label>
+            <input
+              type="text"
+              value={user?.photoURL || ""}
+              readOnly
+              className="input input-bordered w-full bg-white/60 text-gray-700 font-semibold"
+            />
+          </div>
 
           <div className="divider text-white/70">Food Details</div>
 
           {/* Food Inputs */}
-          <input
-            type="text"
-            name="title"
-            placeholder="🍲 Food Name"
-            className="input input-bordered w-full bg-white/80 hover:bg-white focus:ring-2 focus:ring-sky-400 transition-all"
-            required
-          />
+          <div>
+            <label className="label text-white font-semibold">Food Name</label>
+            <input
+              type="text"
+              name="name"
+              placeholder="Enter food name"
+              className="input input-bordered w-full bg-white/80 hover:bg-white focus:ring-2 focus:ring-sky-400 transition-all"
+              required
+            />
+          </div>
 
-          <input
-            type="text"
-            name="Image"
-            placeholder="🖼️ Food Image URL"
-            className="input input-bordered w-full bg-white/80 hover:bg-white focus:ring-2 focus:ring-sky-400 transition-all"
-            required
-          />
+          <div>
+            <label className="label text-white font-semibold">Food Image URL</label>
+            <input
+              type="text"
+              name="Image"
+              placeholder="Enter image URL"
+              className="input input-bordered w-full bg-white/80 hover:bg-white focus:ring-2 focus:ring-sky-400 transition-all"
+              required
+            />
+          </div>
 
-          <input
-            type="text"
-            name="quantity"
-            placeholder="🍛 Quantity (e.g., Serves 4)"
-            className="input input-bordered w-full bg-white/80 hover:bg-white focus:ring-2 focus:ring-sky-400 transition-all"
-            required
-          />
+          <div>
+            <label className="label text-white font-semibold">Quantity</label>
+            <input
+              type="number"
+              name="quantity"
+              placeholder="e.g., Serves 4"
+              className="input input-bordered w-full bg-white/80 hover:bg-white focus:ring-2 focus:ring-sky-400 transition-all"
+              required
+            />
+          </div>
 
-          <input
-            type="text"
-            name="location"
-            placeholder="📍 Pickup Location"
-            className="input input-bordered w-full bg-white/80 hover:bg-white focus:ring-2 focus:ring-sky-400 transition-all"
-            required
-          />
+          <div>
+            <label className="label text-white font-semibold">Pickup Location</label>
+            <input
+              type="text"
+              name="location"
+              placeholder="Enter pickup location"
+              className="input input-bordered w-full bg-white/80 hover:bg-white focus:ring-2 focus:ring-sky-400 transition-all"
+              required
+            />
+          </div>
 
-          <input
-            type="date"
-            name="date"
-            className="input input-bordered w-full bg-white/80 hover:bg-white focus:ring-2 focus:ring-sky-400 transition-all"
-            required
-          />
+          <div>
+            <label className="label text-white font-semibold">Expire Date</label>
+            <input
+              type="date"
+              name="date"
+              className="input input-bordered w-full bg-white/80 hover:bg-white focus:ring-2 focus:ring-sky-400 transition-all"
+              required
+            />
+          </div>
 
-          <textarea
-            name="notes"
-            placeholder="📝 Additional Notes"
-            className="textarea textarea-bordered w-full bg-white/80 hover:bg-white focus:ring-2 focus:ring-sky-400 transition-all"
-            required
-          ></textarea>
+          <div>
+            <label className="label text-white font-semibold">Additional Notes</label>
+            <textarea
+              name="notes"
+              placeholder="Write any notes here..."
+              className="textarea textarea-bordered w-full bg-white/80 hover:bg-white focus:ring-2 focus:ring-sky-400 transition-all"
+              required
+            ></textarea>
+          </div>
 
           {/* Buttons */}
           <div className="flex justify-end gap-4 pt-4">
-            <button
+            <Link to= '/'
               type="button"
-              className="btn btn-outline border-white text-white hover:bg-white hover:text-sky-700 transition-all"
+              className="btn btn-outline border-white text-white hover:bg-white hover:text-orange-300 hover:rounded-2xl transition-all"
             >
               Cancel
-            </button>
-            <button className="btn bg-sky-600 hover:bg-sky-700 text-white font-semibold px-6">
+            </Link>
+            <button className="btn bg-orange-500 hover:bg-orange-600 hover:rounded-2xl text-white font-semibold px-6">
               Add Food
             </button>
           </div>
