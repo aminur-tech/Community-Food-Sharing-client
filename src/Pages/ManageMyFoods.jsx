@@ -90,7 +90,7 @@ const ManageMyFoods = () => {
 
     return (
         <div className="min-h-screen bg-gray-100 py-10">
-            <div className="max-w-6xl mx-auto px-4">
+            <div className="w-full md:max-w-6xl mx-auto px-4">
                 <h2 className="text-3xl font-bold text-center mb-6 text-sky-800">
                     Manage My Foods 🍽️
                 </h2>
@@ -100,11 +100,11 @@ const ManageMyFoods = () => {
                         You haven't added any foods yet.
                     </p>
                 ) : (
-                    <div className="overflow-x-auto shadow-lg rounded-xl">
-                        <table className="table w-full">
+                    <div className="overflow-auto shadow-lg rounded-xl ">
+                        <table className="table table-auto w-full">
                             <thead className="bg-sky-600 text-white">
                                 <tr>
-                                    <th>No</th>
+                                    <th>#</th>
                                     <th>Food</th>
                                     <th>Quantity</th>
                                     <th>Location</th>
@@ -116,7 +116,7 @@ const ManageMyFoods = () => {
                                 {foods.map((food, index) => (
                                     <tr key={food._id} className="hover:bg-sky-50">
                                         <td className="font-semibold text-gray-700">{index + 1}</td>
-                                        <td className="flex items-center gap-3">
+                                        <td className="flex items-center gap-1 md:gap-3">
                                             <img
                                                 src={food.food_image}
                                                 alt={food.food_name}
@@ -126,7 +126,7 @@ const ManageMyFoods = () => {
                                                 {food.food_name}
                                             </span>
                                         </td>
-                                        <td className="font-semibold text-gray-700">{food.food_quantity}</td>
+                                        <td className="font-semibold text-gray-700 text-center md:text-left">{food.food_quantity}</td>
                                         <td className="font-semibold text-gray-700">{food.pickup_location}</td>
                                         <td className="font-semibold text-gray-700">{food.expire_date}</td>
                                         <td>
