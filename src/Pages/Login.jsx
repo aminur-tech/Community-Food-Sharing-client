@@ -41,12 +41,14 @@ const Login = () => {
     const handleGoogleSignIn = (e) => {
         e.preventDefault()
         googleSignIn()
-            .then((result) => {
+            .then(async(result) => {
                 const loggedUser = result.user;
+                const token = await loggedUser.getIdToken();
                 setUser({
                     displayName: loggedUser.displayName,
                     email: loggedUser.email,
                     photoURL: loggedUser.photoURL,
+                    accessToken: token
                 });
                 navigate(`${location.state ? location.state : '/'}`)
             })
